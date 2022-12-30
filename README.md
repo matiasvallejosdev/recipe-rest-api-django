@@ -1,2 +1,3 @@
-# recipe-django-rest-api
-RecipeAPI project developed for the course.
+# RecipeAPI
+
+RecipeAPI project developed for the course []()
