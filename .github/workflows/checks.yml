@@ -19,7 +19,5 @@ jobs:
         run: docker-compose run --rm app sh -c "python manage.py test"
       - name: Lint
         run: docker-compose run --rm app sh -c "flake8"
-      - name: Finished
-        run: docker-compose run --rm app sh -c "python manage.py --command="print("All steps was completed!")
 
 
