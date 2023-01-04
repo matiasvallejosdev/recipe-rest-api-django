@@ -70,14 +70,14 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST'),
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD')
+        'PASSWORD': os.environ.get('DB_PASS'),
     }
 }
 
 # https://stackoverflow.com/questions/47466185/got-an-error-creating-the-test-database-django-unittest
-if 'test' in sys.argv or 'test_coverage' in sys.argv: # Covers regular testing and django-coverage
-    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-    DATABASES['default']['NAME'] = BASE_DIR / 'db.sqlite3'
+# if 'test' in sys.argv or 'test_coverage' in sys.argv: # Covers regular testing and django-coverage
+#     DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+#     DATABASES['default']['NAME'] = BASE_DIR / 'db.sqlite3'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
