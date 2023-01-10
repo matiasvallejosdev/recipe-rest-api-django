@@ -19,13 +19,19 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Native components
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    # Rest components
+    'rest_framework',
+    'rest_framework.authtoken',
+    # Third part components
+    'drf_spectacular',
+    # User components
     'core',
 ]
 
@@ -127,3 +133,33 @@ AUTH_USER_MODEL = 'core.User'
 # Testing colors
 # https://stackoverflow.com/questions/7815513/colorizing-the-output-of-django-tests
 TEST_RUNNER = "redgreenunittest.django.runner.RedGreenDiscoverRunner"
+
+# Rest framework configuration
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        # https://stackoverflow.com/questions/41462593/why-django-swagger-is-not-showing-docs-for-urls-that-has-permissions-isauthentic
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+}
+
+# https://django-rest-swagger.readthedocs.io/en/latest/settings/
+# https://stackoverflow.com/questions/24864902/how-to-add-token-auth-to-swagger-django-rest-framework
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'RecipeAPI',
+    'DESCRIPTION': '🔖 RESTful JSON API for Restaurant.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'APPEND_COMPONENTS': {
+        "securitySchemes": {
+            "Token": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization"
+            }
+        }
+    }
+}
