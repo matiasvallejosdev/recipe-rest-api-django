@@ -16,7 +16,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,7 +59,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'recipe_project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -75,9 +73,13 @@ DATABASES = {
 }
 
 # https://stackoverflow.com/questions/47466185/got-an-error-creating-the-test-database-django-unittest
-# if 'test' in sys.argv or 'test_coverage' in sys.argv: # Covers regular testing and django-coverage
-#     DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-#     DATABASES['default']['NAME'] = BASE_DIR / 'db.sqlite3'
+if 'test' in sys.argv or 'test_coverage' in sys.argv: # Covers regular testing and django-coverage
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -97,7 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -109,7 +110,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -119,3 +119,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Default user model
+
+AUTH_USER_MODEL = 'core.User'
+
+# Testing colors
+# https://stackoverflow.com/questions/7815513/colorizing-the-output-of-django-tests
+TEST_RUNNER = "redgreenunittest.django.runner.RedGreenDiscoverRunner"
