@@ -7,7 +7,8 @@ from .utils import check_email
 
 
 class UserManager(BaseUserManager):
-    """Users in """
+    """Users manager to create user and superuser."""
+
     def create_user(self, email, password=None, **kwargs):
         if not email:
             raise ValueError('Email must be provided')
@@ -39,6 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
     # REQUIRED_FIELDS = ['instance_name']
 
     def get_full_name(self):

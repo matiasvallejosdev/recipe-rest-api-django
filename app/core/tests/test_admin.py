@@ -7,6 +7,7 @@ from django.test import Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+
 def create_sample_user(**kwargs):
     payload = {
         'email': 'user@example.com',
@@ -18,9 +19,9 @@ def create_sample_user(**kwargs):
     return get_user_model().objects.create_superuser(**payload)
 
 
-
 class TestAdmin(TestCase):
     """Test admin from core"""
+
     def setUp(self):
         """Client and data initialization"""
         self.client = Client()
