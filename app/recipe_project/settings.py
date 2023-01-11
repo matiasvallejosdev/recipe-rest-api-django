@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     # Third part components
     'drf_spectacular',
     # User components
+    'user_api',
     'core',
 ]
 
@@ -139,7 +140,6 @@ TEST_RUNNER = "redgreenunittest.django.runner.RedGreenDiscoverRunner"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        # https://stackoverflow.com/questions/41462593/why-django-swagger-is-not-showing-docs-for-urls-that-has-permissions-isauthentic
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'

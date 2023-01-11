@@ -10,9 +10,11 @@ class UserManager(BaseUserManager):
     """Users manager to create user and superuser."""
 
     def create_user(self, email, password=None, **kwargs):
+        """Create new user."""
         if not email:
             raise ValueError('Email must be provided')
         else:
+            email = str(email).lower()
             if check_email(email) is False:
                 raise ValueError('Email must be in the correct format')
         user = self.model(email=self.normalize_email(email), **kwargs)
@@ -21,6 +23,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, **kwargs):
+        """Using create_user method to create a superuser."""
         user = self.create_user(email, password, **kwargs)
         user.is_staff = True
         user.is_superuser = True
@@ -40,7 +43,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-
     # REQUIRED_FIELDS = ['instance_name']
 
     def get_full_name(self):

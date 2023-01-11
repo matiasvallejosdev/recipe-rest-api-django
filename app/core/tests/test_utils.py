@@ -9,7 +9,7 @@ class TestUtils(SimpleTestCase):
         self.assertTrue(check_email('test@example.com'))
         self.assertTrue(check_email('test_valid@example.com'))
 
-    def test_unvalid_email(self):
+    def test_invalid_email(self):
         """Test if an email is invalid"""
         sample_exception = [
             '',

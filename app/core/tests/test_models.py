@@ -18,7 +18,7 @@ class TestModels(TestCase):
         """Test normalize emails"""
         sample_emails = [
             ['test1@EXAMPLE.COM', 'test1@example.com'],
-            ['Test2@example.com', 'Test2@example.com'],
+            ['Test2@example.com', 'test2@example.com'],
             ['test_3@example.com', 'test_3@example.com'],
             ['test4@EXample.COM', 'test4@example.com'],
         ]
