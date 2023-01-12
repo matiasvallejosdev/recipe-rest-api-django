@@ -32,9 +32,11 @@ INSTALLED_APPS = [
     # Third part components
     'drf_spectacular',
     # User components
+    'recipe_api',
     'user_api',
     'core',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

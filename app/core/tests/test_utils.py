@@ -1,5 +1,5 @@
 from django.test import SimpleTestCase
-from app.core.utils import check_email
+from core.utils import check_email
 
 
 class TestUtils(SimpleTestCase):
