@@ -8,12 +8,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
-# from django.shortcuts import get_object_or_404
 
 from .serializers import UserSerializer, AuthSerializer
-# from .permissions import UserIsOwnerOrReadOnly
 
 User = get_user_model()
+
 
 class UserConnectionView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -22,20 +21,24 @@ class UserConnectionView(APIView):
         return Response({
             "detail": "Connection successfully!"
         })
+
+
 class UserTokenView(ObtainAuthToken):
     serializer_class = AuthSerializer
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
+
 class UserCreateView(generics.CreateAPIView):
     serializer_class = UserSerializer
+
 
 class UserMeView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticated,)
+
     def get_object(self):
         return self.request.user
 
 # class UserRetrieveView(generics.RetrieveAPIView):
 #     serializer_class = UserSerializer
 #     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-

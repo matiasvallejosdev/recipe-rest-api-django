@@ -8,8 +8,10 @@ from django.contrib.auth import get_user_model
 
 from recipe_api.models import Recipe
 
+
 class TestModels(TestCase):
     """Test creation of models for recipe_api."""
+
     def test_create_recipe(self):
         """Test create recipe is successful."""
         user = get_user_model().objects.create_user(

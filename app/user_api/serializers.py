@@ -1,8 +1,11 @@
+"""
+Serializers for User.
+"""
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, Serializer
 from django.contrib.auth import get_user_model, authenticate
 
-class UserSerializer(ModelSerializer):
+
+class UserSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(max_length=255, required=False)
     last_name = serializers.CharField(max_length=255, required=False)
 
@@ -24,6 +27,7 @@ class UserSerializer(ModelSerializer):
             user.set_password(password)
         user.save()
         return user
+
 
 class AuthSerializer(serializers.Serializer):
     email = serializers.EmailField()

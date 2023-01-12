@@ -13,6 +13,7 @@ TOKEN_URL = reverse('user_api:token')
 CONNECTION_URL = reverse('user_api:connection')
 ME_URL = reverse('user_api:me')
 
+
 class TestPublicUserAPI(TestCase):
     """User testing for public api views."""
 
@@ -133,6 +134,7 @@ class TestPrivateUserAPI(TestCase):
             last_name='Case'
         )
         self.client.force_authenticate(user=self.user)
+
     def test_user_me_post_not_allowed(self):
         """Test user me post is not allowed."""
         res = self.client.post(ME_URL)

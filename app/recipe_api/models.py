@@ -4,8 +4,10 @@ Recipe models.
 from django.db import models
 from django.conf import settings
 
+
 class Recipe(models.Model):
     """Recipe object."""
+
     class Meta:
         app_label = 'recipe_api'
 

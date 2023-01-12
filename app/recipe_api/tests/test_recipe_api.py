@@ -5,7 +5,6 @@ from decimal import Decimal
 
 from django.test import TestCase
 from django.urls import reverse
-from django.utils import timezone
 from django.contrib.auth import get_user_model
 
 from rest_framework.test import APIClient
@@ -31,6 +30,7 @@ def create_recipe(user, **params):
 
 class TestPublicRecipeAPI(TestCase):
     """Test unauthenticated API requests."""
+
     def setUp(self):
         self.client = APIClient()
 
@@ -43,6 +43,7 @@ class TestPublicRecipeAPI(TestCase):
 
 class TestPrivateRecipeAPI(TestCase):
     """Test authorized API requests."""
+
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
