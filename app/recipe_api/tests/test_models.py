@@ -9,15 +9,20 @@ from django.contrib.auth import get_user_model
 from recipe_api.models import Recipe
 
 
+def create_user():
+    """Create user model."""
+    return get_user_model().objects.create_user(
+        email='user@example.com',
+        password='testexample123'
+    )
+
+
 class TestModels(TestCase):
     """Test creation of models for recipe_api."""
 
     def test_create_recipe(self):
         """Test create recipe is successful."""
-        user = get_user_model().objects.create_user(
-            email='user@example.com',
-            password='testexample123'
-        )
+        user = create_user()
         recipe = Recipe.objects.create(
             user=user,
             title='Recipe title',

@@ -8,9 +8,6 @@ from django.conf import settings
 class Recipe(models.Model):
     """Recipe object."""
 
-    class Meta:
-        app_label = 'recipe_api'
-
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     time_minutes = models.IntegerField(default=1)

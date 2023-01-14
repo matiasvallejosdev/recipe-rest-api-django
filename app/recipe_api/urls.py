@@ -8,7 +8,7 @@ from rest_framework.routers import DefaultRouter
 from .views import RecipeViewset
 
 router = DefaultRouter()
-router.register('recipes', RecipeViewset)
+router.register('', RecipeViewset)
 
 app_name = 'recipe_api'
 urlpatterns = [
