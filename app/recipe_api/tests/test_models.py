@@ -6,7 +6,7 @@ from decimal import Decimal
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from recipe_api.models import Recipe
+from recipe_api.models import Recipe, Tag
 
 
 def create_user():
@@ -31,3 +31,14 @@ class TestModels(TestCase):
             description='Recipe description'
         )
         self.assertEqual(str(recipe), recipe.title)
+
+    def test_create_tag(self):
+        """Test create tags is successfully."""
+        user = create_user()
+        tag = Tag.objects.create(
+            user=user,
+            name='tag1'
+        )
+        self.assertEqual(str(tag), tag.name)
+
+
