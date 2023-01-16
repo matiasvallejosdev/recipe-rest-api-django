@@ -9,15 +9,23 @@ from .serializers import (RecipeCreateSerializer,
                           RecipeSerializer,
                           RecipeDetailSerializer,
                           TagSerializer,
-                          TagDetailSerializer,
-                          IngredientSerializer,
-                          IngredientDetailSerializer)
+                          IngredientSerializer)
 
+class BaseRecipeAttrViewSet(viewsets.ModelViewSet):
+    """Base viewset for recipe attributes."""
+    permission_classes = (permissions.IsAuthenticated,)
 
-class RecipeViewSet(viewsets.ModelViewSet):
+class BaseIngredientTagAttrViewSet(viewsets.ModelViewSet):
+    """Base viewset for ingredients and tags attributes."""
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        """Retrieve ingredients or tags only for authenticated user."""
+        return self.queryset.filter(user=self.request.user).order_by('-name')
+
+class RecipeViewSet(BaseRecipeAttrViewSet):
     model = Recipe
     serializer_class = RecipeDetailSerializer
-    permission_classes = (permissions.IsAuthenticated,)
     queryset = Recipe.objects.all()
 
     def get_queryset(self):
@@ -35,40 +43,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class TagViewSet(mixins.CreateModelMixin,
-                 mixins.ListModelMixin,
-                 mixins.UpdateModelMixin,
-                 mixins.DestroyModelMixin,
-                 viewsets.GenericViewSet):
+class TagViewSet(BaseIngredientTagAttrViewSet):
     model = Tag
-    serializer_class = TagDetailSerializer
+    serializer_class = TagSerializer
     queryset = Tag.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user).order_by('-id')
-
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return TagSerializer
-        return self.serializer_class
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class IngredientViewSet(viewsets.ModelViewSet):
+class IngredientViewSet(BaseIngredientTagAttrViewSet):
     model = Ingredient
-    serializer_class = IngredientDetailSerializer
+    serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user).order_by('-name')
-
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return IngredientSerializer
-        return self.serializer_class
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

@@ -8,13 +8,6 @@ from user_api.serializers import UserSerializer
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ingredient
-        fields = ('id', 'name',)
-        read_only_fields = ('id',)
-
-
-class IngredientDetailSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
 
     class Meta:
@@ -24,14 +17,6 @@ class IngredientDetailSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ('id', 'name',)
-        read_only_fields = ('id',)
-
-
-class TagDetailSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(max_length=255, required=True)
     user = UserSerializer(many=False, read_only=True)
 
     class Meta:
