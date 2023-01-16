@@ -26,6 +26,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Storage and cors
+    'corsheaders',
+    'storages',
     # Rest components
     'rest_framework',
     'rest_framework.authtoken',
@@ -37,10 +40,10 @@ INSTALLED_APPS = [
     'core',
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -82,7 +85,7 @@ DATABASES = {
 }
 
 # https://stackoverflow.com/questions/47466185/got-an-error-creating-the-test-database-django-unittest
-if 'test' in sys.argv or 'test_coverage' in sys.argv: # Covers regular testing and django-coverage
+if 'test' in sys.argv or 'test_coverage' in sys.argv:  # Covers regular testing and django-coverage
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -122,7 +125,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/static/'
+MEDIA_URL = '/static/media/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+if not DEBUG:  # Tell Django to copy statics to the `staticfiles` directory
+    STATIC_ROOT = os.path.join(BASE_DIR, 'vol/web/static/')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'vol/web/media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -155,6 +167,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': '🔖 RESTful JSON API for Restaurant.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
     'APPEND_COMPONENTS': {
         "securitySchemes": {
             "Token": {
@@ -165,3 +178,21 @@ SPECTACULAR_SETTINGS = {
         }
     }
 }
+
+# Default Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# AWS Boto credentials and settings
+AWS_QUERYSTRING_AUTH = False
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', default='')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', default='')
+
+AWS_STORAGE_BUCKET_NAME = 'recipesdjango'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+# CORS configurations
+CORS_ALLOW_ALL_ORIGINS = True  # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ['*']
