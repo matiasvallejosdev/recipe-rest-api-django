@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework import status
 
-from recipe_api.models import Recipe, Tag
+from recipe_api.models import Recipe, Tag, Ingredient
 from recipe_api.serializers import RecipeSerializer, RecipeDetailSerializer
 
 RECIPES_URL = reverse('recipe_api:recipe-list')
@@ -20,6 +20,15 @@ def recipes_detail_url(recipe_id):
     """Creates and return recipe details URL."""
     return reverse('recipe_api:recipe-detail', args=[recipe_id])
 
+
+def create_ingredient(user, **params):
+    payload = {
+        'name': 'Ingredient'
+    }
+    payload.update(**params)
+    return Ingredient.objects.create(user=user, **payload)
+
+
 def create_tag(user, **params):
     payload = {
         'name': 'Tag1'
@@ -27,14 +36,14 @@ def create_tag(user, **params):
     payload.update(**params)
     return Tag.objects.create(user=user, **payload)
 
+
 def create_recipe(user, **params):
     payload = {
         'title': 'Sample title',
         'time_minutes': 4,
         'price': Decimal('1.50'),
         'description': 'Sample description',
-        'link': 'https://example.com/recipe.pdf',
-        'tags': []
+        'link': 'https://example.com/recipe.pdf'
     }
     payload.update(params)
     return Recipe.objects.create(user=user, **payload)
@@ -200,15 +209,15 @@ class TestPrivateRecipeAPI(TestCase):
 
     def test_create_recipe_with_tags(self):
         """Test create a new recipe with multiples tags."""
-        create_tag(user=self.user, name='tag1')
-        create_tag(user=self.user, name='tag2')
+        tag1 = create_tag(user=self.user, name='tag1')
+        tag2 = create_tag(user=self.user, name='tag2')
         payload = {
             'title': 'Sample title',
             'time_minutes': 3,
             'price': Decimal('1.50'),
             'description': 'Sample description',
             'link': 'https://example.com',
-            'tags': [1,2]
+            'tags': [tag1.pk, tag2.pk]
         }
         res = self.client.post(RECIPES_URL, payload)
         exists = Recipe.objects.filter(id=res.data['id']).exists()
@@ -223,3 +232,27 @@ class TestPrivateRecipeAPI(TestCase):
         self.assertTrue(exists)
         self.assertEqual(recipe.user, self.user)
 
+    def test_create_recipe_with_ingredients(self):
+        """Test create a new recipe with multiples ingredients successfully."""
+        ingredient1 = create_ingredient(user=self.user)
+        ingredient2 = create_ingredient(user=self.user)
+        payload = {
+            'title': 'Sample title',
+            'time_minutes': 3,
+            'price': Decimal('1.50'),
+            'description': 'Sample description',
+            'link': 'https://example.com',
+            'ingredients': [ingredient1.pk, ingredient2.pk]
+        }
+        res = self.client.post(RECIPES_URL, payload)
+        exists = Recipe.objects.filter(id=res.data['id']).exists()
+        recipe = Recipe.objects.get(id=res.data['id'])
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        ingredients = recipe.ingredients.all()
+        self.assertEqual(ingredients[0].pk, payload['ingredients'][0])
+        self.assertEqual(ingredients[1].pk, payload['ingredients'][1])
+        payload.pop('ingredients')
+        for k, v in payload.items():
+            self.assertEqual(getattr(recipe, k), v)
+        self.assertTrue(exists)
+        self.assertEqual(recipe.user, self.user)

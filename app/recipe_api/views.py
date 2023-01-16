@@ -4,8 +4,14 @@ Views for recipe_api endpoint.
 from rest_framework import permissions
 from rest_framework import viewsets, mixins
 
-from .models import Recipe, Tag
-from .serializers import RecipeCreateSerializer, RecipeSerializer, RecipeDetailSerializer, TagSerializer, TagDetailSerializer
+from .models import Recipe, Tag, Ingredient
+from .serializers import (RecipeCreateSerializer,
+                          RecipeSerializer,
+                          RecipeDetailSerializer,
+                          TagSerializer,
+                          TagDetailSerializer,
+                          IngredientSerializer,
+                          IngredientDetailSerializer)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -45,6 +51,23 @@ class TagViewSet(mixins.CreateModelMixin,
     def get_serializer_class(self):
         if self.action == 'list':
             return TagSerializer
+        return self.serializer_class
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class IngredientViewSet(viewsets.ModelViewSet):
+    model = Ingredient
+    serializer_class = IngredientDetailSerializer
+    queryset = Ingredient.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user).order_by('-name')
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return IngredientSerializer
         return self.serializer_class
 
     def perform_create(self, serializer):

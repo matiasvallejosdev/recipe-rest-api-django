@@ -15,7 +15,7 @@ from recipe_api.serializers import TagSerializer, TagDetailSerializer
 TAGS_URL = reverse('recipe_api:tag-list')
 
 
-def tag_detail_url(tag_id):
+def get_detail_tag_url(tag_id):
     return reverse('recipe_api:tag-detail', args=[tag_id])
 
 
@@ -107,21 +107,21 @@ class PrivateTestTagAPI(TestCase):
         tag = Tag.objects.get(id=res.data['id'])
         self.assertEqual(tag.name, 'tag-1')
 
-    def test_perform_update(self):
+    def test_perform_tag_update(self):
         """Test tag updated successfully."""
         tag = create_tag(user=self.user, name='my-tag')
         payload = {
             'name': 'my-new-name'
         }
-        res = self.client.patch(tag_detail_url(tag.pk), payload)
+        res = self.client.patch(get_detail_tag_url(tag.pk), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         tag.refresh_from_db()
         self.assertEqual(tag.name, payload['name'])
 
-    def test_delete_tag(self):
+    def test_delete_tag_success(self):
         """Test tag is being deleted successfully."""
         tag = create_tag(user=self.user, name='my-tag')
-        res = self.client.delete(tag_detail_url(tag.pk))
+        res = self.client.delete(get_detail_tag_url(tag.pk))
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         tags = Tag.objects.filter(id=tag.pk).exists()
         self.assertFalse(tags)
@@ -134,7 +134,7 @@ class PrivateTestTagAPI(TestCase):
         new_user = create_user(email='newuser@example.com')
         tag = create_tag(user=new_user)
 
-        res = self.client.patch(tag_detail_url(tag.pk), payload)
+        res = self.client.patch(get_detail_tag_url(tag.pk), payload)
 
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
         tag.refresh_from_db()
@@ -144,7 +144,7 @@ class PrivateTestTagAPI(TestCase):
         """Test trying to delete recipe with other user."""
         new_user = create_user(email='newuser@example.com')
         tag = create_tag(user=new_user)
-        res = self.client.delete(tag_detail_url(tag.pk))
+        res = self.client.delete(get_detail_tag_url(tag.pk))
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
         exists = Tag.objects.filter(id=tag.pk).exists()
         self.assertTrue(exists)
