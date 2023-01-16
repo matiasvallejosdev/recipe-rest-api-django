@@ -53,9 +53,10 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'time_minutes', 'price', 'link', 'user', 'description', 'tags', 'ingredients',)
         read_only_fields = ('id',)
 
+
 class RecipeImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ('id', 'thumbnail', )
+        fields = ('id', 'thumbnail',)
         read_only_fields = ('id',)
         extra_kwargs = {'thumbnail': {'required': 'True'}}

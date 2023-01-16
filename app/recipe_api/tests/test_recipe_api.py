@@ -1,7 +1,7 @@
 """
 Test for recipe_api.
 """
-import os
+# import os
 import tempfile
 
 from PIL import Image
@@ -24,6 +24,7 @@ RECIPES_URL = reverse('recipe_api:recipe-list')
 def recipes_detail_url(recipe_id):
     """Creates and return recipe details URL."""
     return reverse('recipe_api:recipe-detail', args=[recipe_id])
+
 
 def recipes_thumbnail_upload_url(recipe_id):
     """Creates and return recipes image upload URL."""
@@ -266,8 +267,10 @@ class TestPrivateRecipeAPI(TestCase):
         self.assertTrue(exists)
         self.assertEqual(recipe.user, self.user)
 
+
 class TestImageUpload(TestCase):
     """Tests for the image upload API."""
+
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
@@ -283,7 +286,7 @@ class TestImageUpload(TestCase):
     def test_upload_recipe_thumbnail_image(self):
         """Test uploading an image to a recipe thumbnail image."""
         with tempfile.NamedTemporaryFile(suffix='.jpg') as image_file:
-            img = Image.new('RGB', (10,10))
+            img = Image.new('RGB', (10, 10))
             img.save(image_file, format='JPEG')
             image_file.seek(0)
             payload = {
@@ -304,4 +307,3 @@ class TestImageUpload(TestCase):
                                payload,
                                format='multipart')
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-
