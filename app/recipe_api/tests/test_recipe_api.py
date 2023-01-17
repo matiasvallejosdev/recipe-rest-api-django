@@ -332,7 +332,8 @@ class TestImageUpload(TestCase):
         self.recipe = create_recipe(user=self.user)
 
     def tearDown(self):
-        self.recipe.thumbnail.delete()
+        # self.recipe.thumbnail.delete()
+        pass
 
     def test_upload_recipe_thumbnail_image(self):
         """Test uploading an image to a recipe thumbnail image."""
