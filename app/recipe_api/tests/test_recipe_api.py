@@ -266,7 +266,7 @@ class TestPrivateRecipeAPI(TestCase):
             self.assertEqual(getattr(recipe, k), v)
         self.assertTrue(exists)
         self.assertEqual(recipe.user, self.user)
-    
+
     def test_filter_recipes_by_tags(self):
         """Test filtering recipes using tags query params."""
         tag1 = create_tag(user=self.user, name='tag1')
@@ -275,8 +275,8 @@ class TestPrivateRecipeAPI(TestCase):
         recipe1.tags.add(tag1)
         recipe2 = create_recipe(user=self.user, title='recipe2')
         recipe2.tags.add(tag2)
-        recipe3 = create_recipe(user=self.user, title='recipe3') # no tags
-        
+        recipe3 = create_recipe(user=self.user, title='recipe3')  # no tags
+
         params = {
             'tags': f'{tag1.id}, {tag2.id}'
         }
@@ -301,7 +301,7 @@ class TestPrivateRecipeAPI(TestCase):
         recipe1.ingredients.add(ingredient1)
         recipe2 = create_recipe(user=self.user, title='recipe2')
         recipe2.ingredients.add(ingredient2)
-        recipe3 = create_recipe(user=self.user, title='recipe3') # no tags
+        recipe3 = create_recipe(user=self.user, title='recipe3')  # no tags
 
         params = {
             'ingredients': f'{ingredient1.id}, {ingredient2.id}'
@@ -331,30 +331,30 @@ class TestImageUpload(TestCase):
         self.client.force_authenticate(user=self.user)
         self.recipe = create_recipe(user=self.user)
 
-    # def tearDown(self):
-    #     self.recipe.thumbnail.delete()
+    def tearDown(self):
+        self.recipe.thumbnail.delete()
 
-    # def test_upload_recipe_thumbnail_image(self):
-    #     """Test uploading an image to a recipe thumbnail image."""
-    #     with tempfile.NamedTemporaryFile(suffix='.jpg') as image_file:
-    #         img = Image.new('RGB', (10, 10))
-    #         img.save(image_file, format='JPEG')
-    #         image_file.seek(0)
-    #         payload = {
-    #             'thumbnail': image_file
-    #         }
-    #         res = self.client.post(recipes_thumbnail_upload_url(self.recipe.id),
-    #                                payload,
-    #                                format='multipart')
-    #         self.recipe.refresh_from_db()
-    #         self.assertEqual(res.status_code, status.HTTP_200_OK)
-    #         self.assertIn('thumbnail', res.data)
-    #         # self.assertTrue(os.path.exists(self.recipe.thumbnail.path))
-    #
-    # def test_upload_invalid_recipe_thumbnail_image(self):
-    #     """Test uploading an invalid image to a recipe with error."""
-    #     payload = {}
-    #     res = self.client.post(recipes_thumbnail_upload_url(self.recipe.id),
-    #                            payload,
-    #                            format='multipart')
-    #     self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_upload_recipe_thumbnail_image(self):
+        """Test uploading an image to a recipe thumbnail image."""
+        with tempfile.NamedTemporaryFile(suffix='.jpg') as image_file:
+            img = Image.new('RGB', (10, 10))
+            img.save(image_file, format='JPEG')
+            image_file.seek(0)
+            payload = {
+                'thumbnail': image_file
+            }
+            res = self.client.post(recipes_thumbnail_upload_url(self.recipe.id),
+                                   payload,
+                                   format='multipart')
+            self.recipe.refresh_from_db()
+            self.assertEqual(res.status_code, status.HTTP_200_OK)
+            self.assertIn('thumbnail', res.data)
+            # self.assertTrue(os.path.exists(self.recipe.thumbnail.path))
+
+    def test_upload_invalid_recipe_thumbnail_image(self):
+        """Test uploading an invalid image to a recipe with error."""
+        payload = {}
+        res = self.client.post(recipes_thumbnail_upload_url(self.recipe.id),
+                               payload,
+                               format='multipart')
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)

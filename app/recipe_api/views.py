@@ -26,6 +26,7 @@ class BaseRecipeAttrViewSet(viewsets.ModelViewSet):
     """Base viewset for recipe attributes."""
     permission_classes = (permissions.IsAuthenticated,)
 
+
 @extend_schema_view(
     list=extend_schema(
         parameters=[
@@ -48,6 +49,7 @@ class BaseIngredientTagAttrViewSet(viewsets.ModelViewSet):
         if assigned_only:
             queryset = queryset.filter(recipe__isnull=False)
         return queryset.filter(user=self.request.user).order_by('-name').distinct()
+
 
 @extend_schema_view(
     list=extend_schema(
