@@ -1,6 +1,12 @@
 """
 Views for recipe_api endpoint.
 """
+from drf_spectacular.utils import (
+    extend_schema_view,
+    extend_schema,
+    OpenApiParameter,
+    OpenApiTypes
+)
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework import status
@@ -20,24 +26,66 @@ class BaseRecipeAttrViewSet(viewsets.ModelViewSet):
     """Base viewset for recipe attributes."""
     permission_classes = (permissions.IsAuthenticated,)
 
-
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                'assigned_only',
+                OpenApiTypes.INT, enum=[0, 1],
+                description='Filter by items assigned to recipes.',
+            ),
+        ]
+    )
+)
 class BaseIngredientTagAttrViewSet(viewsets.ModelViewSet):
     """Base viewset for ingredients and tags attributes."""
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         """Retrieve ingredients or tags only for authenticated user."""
-        return self.queryset.filter(user=self.request.user).order_by('-name')
+        assigned_only = bool(self.request.query_params.get('assigned_only', 0))
+        queryset = self.queryset
+        if assigned_only:
+            queryset = queryset.filter(recipe__isnull=False)
+        return queryset.filter(user=self.request.user).order_by('-name').distinct()
 
-
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                'tags',
+                OpenApiTypes.STR,
+                description='Comma separated list of tag IDs to filter',
+            ),
+            OpenApiParameter(
+                'ingredients',
+                OpenApiTypes.STR,
+                description='Comma separated list of ingredient IDs to filter',
+            ),
+        ]
+    )
+)
 class RecipeViewSet(BaseRecipeAttrViewSet):
     model = Recipe
     serializer_class = RecipeDetailSerializer
     queryset = Recipe.objects.all()
 
+    def _params_to_ints(self, qs):
+        """Convert string into a list of integers."""
+        return [int(param_id) for param_id in qs.split(',')]
+
     def get_queryset(self):
-        """Retrieve recipes for authenticated user."""
-        return self.queryset.filter(user=self.request.user).order_by('-id')
+        """Retrieve recipes for authenticated user filtered by tags and ingredients."""
+        tags = self.request.query_params.get('tags', None)
+        ingredients = self.request.query_params.get('ingredients', None)
+        queryset = self.queryset.filter(user=self.request.user)
+        if tags:
+            tag_ids = self._params_to_ints(tags)
+            queryset = queryset.filter(tags__id__in=tag_ids)
+        if ingredients:
+            ingredient_ids = self._params_to_ints(ingredients)
+            queryset = queryset.filter(ingredients__id__in=ingredient_ids)
+        return queryset.order_by('-id').distinct()
 
     def get_serializer_class(self):
         """Returns serializer class for the request."""
