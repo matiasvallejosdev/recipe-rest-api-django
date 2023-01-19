@@ -18,7 +18,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Load environment .env
-if DEBUG:
+if not DEBUG:
     dotenv_path = os.path.join(BASE_DIR, '.env')
     dotenv.load_dotenv(dotenv_path)
 

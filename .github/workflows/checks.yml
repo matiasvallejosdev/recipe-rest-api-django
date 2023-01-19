@@ -24,8 +24,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           DJ_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: echo "KEY_ID:" $AWS_ACCESS_KEY_ID
-#        run: docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
+        run: docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
       - name: Lint
         run: docker-compose run --rm app sh -c "flake8"
 
