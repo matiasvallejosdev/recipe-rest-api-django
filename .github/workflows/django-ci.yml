@@ -12,7 +12,7 @@ jobs:
     name: Test and Lint
     runs-on: ubuntu-20.04
     steps:
-      - name: create env file
+      - name: Create ENV file
         run: |
           touch .env
           echo AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
