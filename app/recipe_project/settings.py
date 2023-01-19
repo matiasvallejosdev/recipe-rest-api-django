@@ -1,7 +1,6 @@
 import os
 import sys
 from pathlib import Path
-import dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,11 +15,6 @@ SECRET_KEY = os.environ.get('DJ_SECRET_KEY', 'django-insecure-37cbt(ocio2#r4=ajf
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-# Load environment .env
-if not DEBUG:
-    dotenv_path = os.path.join(BASE_DIR, '.env')
-    dotenv.load_dotenv(dotenv_path)
 
 # Application definition
 
