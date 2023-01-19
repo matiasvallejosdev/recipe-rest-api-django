@@ -37,6 +37,8 @@ jobs:
           context: .
           push: true
           tags: user/app:latest
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }}
       - name: Checkout
         uses: actions/checkout@main
       - name: Test
