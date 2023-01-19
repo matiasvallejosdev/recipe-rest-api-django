@@ -11,9 +11,6 @@ EXPOSE 8000
 
 ARG DEV=false
 
-RUN pip3 install flake8
-RUN pip3 install psycopg2-binary
-
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --update --no-cache postgresql-client jpeg-dev && \
