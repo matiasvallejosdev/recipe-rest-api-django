@@ -3,6 +3,7 @@ LABEL maintainer="matiasvallejos.com"
 
 ENV PYTHONUNBUFFERED 1
 
+COPY .env /
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 COPY ./app /app
